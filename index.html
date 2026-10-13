@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#16866b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Nosso Lar">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nosso Lar — Controle Financeiro da Casa</title>
+<style>
+:root{--green:#16866b;--green2:#e8f5f0;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--bg:#f5f8fb;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:white;border-bottom:1px solid var(--line);padding:18px max(16px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{font-size:24px;font-weight:800}.sub,.muted{color:var(--muted);font-size:13px}.monthbar{display:flex;gap:8px;align-items:center}
+main{max-width:1200px;margin:auto;padding:20px 16px 40px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+button,.filebtn{border:0;border-radius:9px;padding:10px 13px;font:600 13px system-ui;cursor:pointer;background:var(--green2);color:#116b56}
+button.primary{background:var(--green);color:white}button.danger{background:#fef2f2;color:var(--red)}button.tab{background:white;color:#475569;border:1px solid var(--line)}button.tab.active{background:var(--green2);color:#116b56;border-color:#b9e8d3}
+.panel,.metric{background:white;border:1px solid var(--line);border-radius:14px;padding:17px;min-width:0}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.metric .label{color:var(--muted);font-size:13px}.metric .value{font-size:clamp(18px,2vw,26px);font-weight:800;margin-top:7px;overflow-wrap:anywhere}
+h2{font-size:17px;margin:0 0 13px}h3{font-size:14px;margin:18px 0 8px}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.hidden{display:none!important}
+form.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input,select{width:100%;padding:10px;border:1px solid #dbe3ed;border-radius:9px;background:white;font:14px system-ui;color:var(--ink)}.wide{grid-column:1/-1}
+.entry{border-bottom:1px solid #edf1f5;padding:12px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}.entry:last-child{border-bottom:0}.entry-title{font-weight:650;font-size:14px}.entry-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}.entry-actions button{padding:6px 8px;font-size:11px}.pill{font-size:11px;border-radius:20px;padding:4px 8px;background:var(--green2);color:#167357;display:inline-block}.notice{background:#ecfdf5;color:#065f46;padding:12px;border-radius:9px;margin-bottom:14px}.tip{line-height:1.7;font-size:13px;color:var(--muted)}
+@media(max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}form.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:15px}.brand{font-size:21px}}
+@media(max-width:430px){form.grid{grid-template-columns:1fr}.wide{grid-column:auto}.monthbar{width:100%;justify-content:space-between}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">⌂ Nosso Lar</div><div class="sub">Controle financeiro da casa · versão local</div></div><div class="monthbar"><button class="tab" id="prev">‹</button><strong id="monthLabel"></strong><button class="tab" id="next">›</button></div></header>
+<main>
+<div id="notice" class="notice hidden"></div>
+<nav class="nav">
+<button class="tab active" data-tab="home">Início</button><button class="tab" data-tab="entries">Despesas e receitas</button><button class="tab" data-tab="fixed">Despesas fixas</button><button class="tab" data-tab="plans">Parcelamentos</button><button class="tab" data-tab="invoices">Faturas e compras</button>
+</nav>
+<section id="home">
+<div class="metrics">
+<div class="metric"><div class="label">Receitas do mês</div><div class="value" id="income">R$ 0,00</div></div>
+<div class="metric"><div class="label">Despesas do mês</div><div class="value" id="expense">R$ 0,00</div></div>
+<div class="metric"><div class="label">Saldo previsto</div><div class="value" id="balance">R$ 0,00</div></div>
+<div class="metric"><div class="label">Faturas do mês</div><div class="value" id="invoiceTotal">R$ 0,00</div></div>
+</div>
+<div class="layout">
+<div class="panel"><h2>Resumo do mês</h2><div id="summary"></div></div>
+<div class="panel"><h2>Backup dos seus dados</h2><p class="tip">Os registros ficam neste navegador. Exporte um backup regularmente e guarde o arquivo em um local seguro. Limpar os dados do navegador pode apagar seus registros.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" id="export">Exportar backup JSON</button><label class="filebtn">Importar backup <input id="import" type="file" accept=".json,application/json" hidden></label></div><p class="tip">A importação substitui os registros atuais após sua confirmação.</p></div>
+</div>
+<div class="panel" style="margin-top:14px"><h2>Regras do controle</h2><div class="tip">• Despesas fixas aparecem nos meses seguintes até serem desativadas.<br>• Parcelamentos geram uma parcela por mês até completar a quantidade informada.<br>• Compras detalhadas da fatura são apenas informativas e não são somadas novamente ao total da fatura.<br>• Marcar um lançamento como pago altera somente seu status.</div></div>
+</section>
+<section id="entries" class="hidden">
+<div class="panel"><h2>Novo lançamento</h2><form id="entryForm" class="grid">
+<div class="field"><label>Tipo</label><select id="eType"><option value="expense">Despesa</option><option value="income">Receita</option></select></div>
+<div class="field"><label>Descrição</label><input id="eDesc" required placeholder="Ex.: supermercado"></div>
+<div class="field"><label>Categoria</label><select id="eCat"><option>Moradia</option><option>Alimentação</option><option>Transporte</option><option>Saúde</option><option>Lazer</option><option>Educação</option><option>Compras</option><option>Salário</option><option>Outros</option></select></div>
+<div class="field"><label>Valor (R$)</label><input id="eAmount" type="number" min=".01" step=".01" required></div>
+<div class="field"><label>Data</label><input id="eDate" type="date" required></div>
+<div class="field"><label>Status</label><select id="ePaid"><option value="false">Pendente</option><option value="true">Pago / recebido</option></select></div>
+<div class="wide"><button class="primary">Adicionar lançamento</button></div></form></div>
+<div class="panel" style="margin-top:14px"><h2>Lançamentos manuais do mês</h2><div id="entryList"></div></div>
+</section>
+<section id="fixed" class="hidden">
+<div class="panel"><h2>Cadastrar despesa fixa</h2><p class="muted">Cadastre uma vez. Ela será prevista mensalmente a partir da data inicial, até você desativá-la.</p><form id="fixedForm" class="grid">
+<div class="field"><label>Descrição</label><input id="fDesc" required placeholder="Ex.: internet"></div>
+<div class="field"><label>Categoria</label><select id="fCat"><option>Moradia</option><option>Alimentação</option><option>Transporte</option><option>Saúde</option><option>Educação</option><option>Assinaturas</option><option>Outros</option></select></div>
+<div class="field"><label>Valor mensal (R$)</label><input id="fAmount" type="number" min=".01" step=".01" required></div>
+<div class="field"><label>Dia de vencimento</label><input id="fDay" type="number" min="1" max="31" value="10" required></div>
+<div class="field"><label>Primeiro mês / data inicial</label><input id="fStart" type="date" required></div>
+<div class="wide"><button class="primary">Salvar despesa fixa</button></div></form></div>
+<div class="panel" style="margin-top:14px"><h2>Despesas fixas cadastradas</h2><div id="fixedList"></div></div>
+</section>
+<section id="plans" class="hidden">
+<div class="panel"><h2>Nova compra parcelada (fora dos cartões)</h2><p class="muted">Informe o valor total, a quantidade de parcelas e a data da primeira cobrança.</p><form id="planForm" class="grid">
+<div class="field"><label>Descrição</label><input id="pDesc" required placeholder="Ex.: sofá"></div>
+<div class="field"><label>Categoria</label><select id="pCat"><option>Moradia</option><option>Compras</option><option>Educação</option><option>Saúde</option><option>Transporte</option><option>Outros</option></select></div>
+<div class="field"><label>Valor total (R$)</label><input id="pTotal" type="number" min=".01" step=".01" required></div>
+<div class="field"><label>Quantidade de parcelas</label><input id="pCount" type="number" min="2" max="120" value="6" required></div>
+<div class="field"><label>Data da primeira parcela</label><input id="pStart" type="date" required></div>
+<div class="wide"><button class="primary">Criar parcelamento</button></div></form></div>
+<div class="panel" style="margin-top:14px"><h2>Compras parceladas</h2><div id="planList"></div></div>
+</section>
+<section id="invoices" class="hidden">
+<div class="panel"><h2>Cadastrar fatura de cartão</h2><p class="muted">O total da fatura entra nas despesas do mês. As compras detalhadas não entram novamente no total.</p><form id="invoiceForm" class="grid">
+<div class="field"><label>Nome do cartão</label><input id="iCard" required placeholder="Ex.: cartão principal"></div>
+<div class="field"><label>Valor total (R$)</label><input id="iTotal" type="number" min=".01" step=".01" required></div>
+<div class="field"><label>Vencimento</label><input id="iDate" type="date" required></div>
+<div class="wide"><button class="primary">Adicionar fatura</button></div></form></div>
+<div class="panel" style="margin-top:14px"><h2>Faturas cadastradas</h2><div id="invoiceList"></div></div>
+<div class="panel" style="margin-top:14px"><h2>Compras detalhadas (opcional)</h2><p class="muted">Itens para consulta, sem duplicar o valor da fatura.</p><form id="purchaseForm" class="grid">
+<div class="field"><label>Fatura</label><select id="buyInvoice" required></select></div>
+<div class="field"><label>Descrição da compra</label><input id="buyDesc" required></div>
+<div class="field"><label>Valor (R$)</label><input id="buyAmount" type="number" min=".01" step=".01" required></div>
+<div class="wide"><button class="primary">Adicionar compra detalhada</button></div></form><div id="purchaseList"></div></div>
+</section>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),key='nossoLarFinanceiroLocalV1';
+const money=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const ym=s=>String(s||'').slice(0,7),newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const blank=()=>({entries:[],fixedRules:[],plans:[],invoices:[],purchases:[]});
+function load(){try{let d=JSON.parse(localStorage.getItem(key)||'null')||blank();for(const k of ['entries','fixedRules','plans','invoices','purchases'])if(!Array.isArray(d[k]))d[k]=[];return d}catch{return blank()}}
+let data=load(),month=ym(today());
+function save(){try{localStorage.setItem(key,JSON.stringify(data));render()}catch(e){alert('Não foi possível salvar no navegador. Exporte um backup e libere espaço, se necessário.')}}
+function notify(s){$('notice').textContent=s;$('notice').classList.remove('hidden');setTimeout(()=>$('notice').classList.add('hidden'),3500)}
+function monthName(m){let [y,n]=m.split('-').map(Number);return new Date(y,n-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}
+function offsetDate(start,offset,day){const d=new Date((start||today())+'T12:00:00');const first=new Date(d.getFullYear(),d.getMonth()+offset,1);const last=new Date(first.getFullYear(),first.getMonth()+1,0).getDate();return `${first.getFullYear()}-${String(first.getMonth()+1).padStart(2,'0')}-${String(Math.min(day||d.getDate(),last)).padStart(2,'0')}`}
+function rowsForMonth(){const rows=[];
+data.entries.forEach(e=>{if(ym(e.date)===month)rows.push({key:'e:'+e.id,kind:e.type,desc:e.description,cat:e.category,amount:+e.amount,date:e.date,paid:e.paid,source:'entry',id:e.id})});
+data.fixedRules.forEach(r=>{if(!r.active||month<ym(r.start))return;const off=(+month.slice(0,4)-+ym(r.start).slice(0,4))*12+(+month.slice(5,7)-+ym(r.start).slice(5,7));const date=offsetDate(r.start,off,+r.day);if(ym(date)===month)rows.push({key:`f:${r.id}:${month}`,kind:'expense',desc:r.description,cat:r.category,amount:+r.amount,date,paid:!!r.paidMonths?.[month],source:'fixed',id:r.id})});
+data.plans.forEach(p=>{const start=ym(p.start),off=(+month.slice(0,4)-+start.slice(0,4))*12+(+month.slice(5,7)-+start.slice(5,7));if(off<0||off>=+p.count)return;let part=Math.round(+p.total/+p.count*100)/100;if(off===+p.count-1)part=Math.round((+p.total-part*(+p.count-1))*100)/100;const date=offsetDate(p.start,off);if(ym(date)===month)rows.push({key:`p:${p.id}:${off}`,kind:'expense',desc:`${p.description} (${off+1}/${p.count})`,cat:p.category,amount:part,date,paid:!!p.paidParts?.[off],source:'plan',id:p.id,part:off})});
+data.invoices.forEach(i=>{if(ym(i.date)===month)rows.push({key:'i:'+i.id,kind:'expense',desc:'Fatura — '+i.card,cat:'Fatura de cartão',amount:+i.total,date:i.date,paid:i.paid,source:'invoice',id:i.id})});return rows.sort((a,b)=>a.date.localeCompare(b.date))}
+function item(r){return `<div class="entry"><div><div class="entry-title">${esc(r.desc)}</div><div class="muted">${esc(r.cat||'Outros')} · ${esc(r.date)} · <span class="pill">${r.paid?'Pago':'Pendente'}</span></div></div><div style="text-align:right;flex-shrink:0"><strong>${money(r.amount)}</strong><div class="entry-actions"><button data-toggle="${esc(r.key)}">${r.paid?'Desfazer':'Marcar pago'}</button>${r.source==='entry'?`<button class="danger" data-delete-entry="${r.id}">Excluir</button>`:''}</div></div></div>`}
+function render(){ $('monthLabel').textContent=monthName(month);const rows=rowsForMonth(),inc=rows.filter(r=>r.kind==='income').reduce((s,r)=>s+r.amount,0),out=rows.filter(r=>r.kind==='expense').reduce((s,r)=>s+r.amount,0),inv=rows.filter(r=>r.source==='invoice').reduce((s,r)=>s+r.amount,0);
+$('income').textContent=money(inc);$('expense').textContent=money(out);$('balance').textContent=money(inc-out);$('balance').style.color=inc-out<0?'var(--red)':'var(--green)';$('invoiceTotal').textContent=money(inv);
+$('summary').innerHTML=`<div class="entry"><span>Despesas pendentes</span><strong>${money(rows.filter(r=>r.kind==='expense'&&!r.paid).reduce((s,r)=>s+r.amount,0))}</strong></div><div class="entry"><span>Despesas fixas ativas</span><strong>${data.fixedRules.filter(r=>r.active).length}</strong></div><div class="entry"><span>Parcelas neste mês</span><strong>${rows.filter(r=>r.source==='plan').length}</strong></div><div class="entry"><span>Despesas pagas</span><strong>${money(rows.filter(r=>r.kind==='expense'&&r.paid).reduce((s,r)=>s+r.amount,0))}</strong></div><h3>Lançamentos do mês</h3>${rows.length?rows.map(item).join(''):'<p class="muted">Nenhum lançamento neste mês.</p>'}`;
+const manual=rows.filter(r=>r.source==='entry');$('entryList').innerHTML=manual.length?manual.map(item).join(''):'<p class="muted">Nenhum lançamento manual neste mês.</p>';
+$('fixedList').innerHTML=data.fixedRules.length?data.fixedRules.map(r=>`<div class="entry"><div><div class="entry-title">${esc(r.description)}</div><div class="muted">${esc(r.category)} · dia ${r.day} · ${money(r.amount)} por mês · início ${esc(r.start)}</div><span class="pill">${r.active?'Ativa':'Desativada'}</span></div><div class="entry-actions"><button data-fixed-toggle="${r.id}">${r.active?'Desativar':'Reativar'}</button><button class="danger" data-fixed-delete="${r.id}">Excluir</button></div></div>`).join(''):'<p class="muted">Nenhuma despesa fixa cadastrada.</p>';
+$('planList').innerHTML=data.plans.length?data.plans.map(p=>`<div class="entry"><div><div class="entry-title">${esc(p.description)}</div><div class="muted">${esc(p.category)} · total ${money(p.total)} · ${p.count} parcelas · início ${esc(p.start)}</div></div><button class="danger" data-plan-delete="${p.id}">Excluir plano</button></div>`).join(''):'<p class="muted">Nenhuma compra parcelada cadastrada.</p>';
+$('invoiceList').innerHTML=data.invoices.length?data.invoices.map(i=>`<div class="entry"><div><div class="entry-title">${esc(i.card)}</div><div class="muted">Vencimento ${esc(i.date)} · <span class="pill">${i.paid?'Paga':'Pendente'}</span></div></div><div style="text-align:right"><strong>${money(i.total)}</strong><div class="entry-actions"><button data-invoice-toggle="${i.id}">${i.paid?'Desfazer':'Marcar paga'}</button><button class="danger" data-invoice-delete="${i.id}">Excluir</button></div></div></div>`).join(''):'<p class="muted">Nenhuma fatura cadastrada.</p>';
+$('buyInvoice').innerHTML=data.invoices.length?data.invoices.map(i=>`<option value="${i.id}">${esc(i.card)} · ${esc(i.date)}</option>`).join(''):'<option value="">Cadastre uma fatura primeiro</option>';
+$('purchaseList').innerHTML=data.purchases.length?'<h3>Compras detalhadas (informativas)</h3>'+data.purchases.map(p=>{const i=data.invoices.find(x=>x.id===p.invoiceId);return `<div class="entry"><div><div class="entry-title">${esc(p.description)}</div><div class="muted">${esc(i?.card||'Fatura removida')} · não soma novamente</div></div><strong>${money(p.amount)}</strong></div>`}).join(''):'';
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['home','entries','fixed','plans','invoices'].forEach(k=>$(k).classList.toggle('hidden',k!==b.dataset.tab))});
+$('prev').onclick=()=>{let [y,m]=month.split('-').map(Number),d=new Date(y,m-2,1);month=ym(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`);render()};
+$('next').onclick=()=>{let [y,m]=month.split('-').map(Number),d=new Date(y,m,1);month=ym(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`);render()};
+['eDate','fStart','pStart','iDate'].forEach(id=>$(id).value=today());
+$('entryForm').onsubmit=e=>{e.preventDefault();data.entries.push({id:newId(),type:$('eType').value,description:$('eDesc').value.trim(),category:$('eCat').value,amount:+$('eAmount').value,date:$('eDate').value,paid:$('ePaid').value==='true'});save();e.target.reset();$('eDate').value=today();notify('Lançamento adicionado.')};
+$('fixedForm').onsubmit=e=>{e.preventDefault();data.fixedRules.push({id:newId(),description:$('fDesc').value.trim(),category:$('fCat').value,amount:+$('fAmount').value,day:+$('fDay').value,start:$('fStart').value,active:true,paidMonths:{}});save();e.target.reset();$('fStart').value=today();$('fDay').value=10;notify('Despesa fixa programada para os meses seguintes.')};
+$('planForm').onsubmit=e=>{e.preventDefault();data.plans.push({id:newId(),description:$('pDesc').value.trim(),category:$('pCat').value,total:+$('pTotal').value,count:+$('pCount').value,start:$('pStart').value,paidParts:{}});save();e.target.reset();$('pStart').value=today();$('pCount').value=6;notify('Parcelamento cadastrado e distribuído pelos meses.')};
+$('invoiceForm').onsubmit=e=>{e.preventDefault();data.invoices.push({id:newId(),card:$('iCard').value.trim(),total:+$('iTotal').value,date:$('iDate').value,paid:false});save();e.target.reset();$('iDate').value=today();notify('Fatura cadastrada.')};
+$('purchaseForm').onsubmit=e=>{e.preventDefault();if(!$('buyInvoice').value)return notify('Cadastre uma fatura primeiro.');data.purchases.push({id:newId(),invoiceId:$('buyInvoice').value,description:$('buyDesc').value.trim(),amount:+$('buyAmount').value});save();e.target.reset();notify('Compra detalhada adicionada sem duplicidade.')};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+if(b.dataset.toggle){const a=b.dataset.toggle.split(':'),type=a[0],id=a[1];if(type==='e'){let x=data.entries.find(x=>x.id===id);if(x)x.paid=!x.paid}else if(type==='f'){let x=data.fixedRules.find(x=>x.id===id);if(x){x.paidMonths||={};x.paidMonths[a[2]]=!x.paidMonths[a[2]]}}else if(type==='p'){let x=data.plans.find(x=>x.id===id);if(x){x.paidParts||={};x.paidParts[a[2]]=!x.paidParts[a[2]]}}else if(type==='i'){let x=data.invoices.find(x=>x.id===id);if(x)x.paid=!x.paid}save()}
+if(b.dataset.deleteEntry){data.entries=data.entries.filter(x=>x.id!==b.dataset.deleteEntry);save()}
+if(b.dataset.fixedToggle){let x=data.fixedRules.find(x=>x.id===b.dataset.fixedToggle);if(x)x.active=!x.active;save()}
+if(b.dataset.fixedDelete){data.fixedRules=data.fixedRules.filter(x=>x.id!==b.dataset.fixedDelete);save()}
+if(b.dataset.planDelete){data.plans=data.plans.filter(x=>x.id!==b.dataset.planDelete);save()}
+if(b.dataset.invoiceToggle){let x=data.invoices.find(x=>x.id===b.dataset.invoiceToggle);if(x)x.paid=!x.paid;save()}
+if(b.dataset.invoiceDelete){let id=b.dataset.invoiceDelete;data.invoices=data.invoices.filter(x=>x.id!==id);data.purchases=data.purchases.filter(x=>x.invoiceId!==id);save()}
+});
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='backup-nosso-lar.json';a.click();URL.revokeObjectURL(url);notify('Backup exportado. Guarde o arquivo em local seguro.')};
+$('import').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.entries)||!Array.isArray(d.invoices))throw Error();if(!confirm('Isso substituirá os dados atuais deste navegador. Deseja continuar?'))return;data={...blank(),...d};save();notify('Backup importado.')}catch{notify('Não foi possível importar. Selecione um backup JSON válido.')}e.target.value=''};
+render();
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+</script>
+</body></html>

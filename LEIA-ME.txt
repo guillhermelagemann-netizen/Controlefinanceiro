@@ -1,0 +1,28 @@
+NOSSO LAR — PACOTE WEB PARA IPAD
+
+Conteúdo:
+- index.html: painel financeiro funcional
+- manifest.webmanifest: configuração para instalação como app
+- sw.js: cache do painel para ajudar a abrir após a primeira visita
+- icon-192.png e icon-512.png: ícones do app
+
+PUBLICAÇÃO GRATUITA COM GITHUB PAGES
+1. No computador, entre em github.com e crie uma conta, se necessário.
+2. Crie um repositório público chamado: nosso-lar-financas
+3. Envie os cinco arquivos deste pacote para a raiz do repositório.
+4. No repositório, abra Settings > Pages.
+5. Em Build and deployment, escolha Deploy from a branch; branch main e pasta /(root); salve.
+6. Aguarde a publicação e abra o endereço mostrado pelo GitHub Pages. Ele será semelhante a:
+   https://SEU-USUARIO.github.io/nosso-lar-financas/
+7. No iPad, abra esse endereço no Safari. Toque em Compartilhar > Adicionar à Tela de Início > Adicionar.
+
+PRIVACIDADE E BACKUP
+- Os lançamentos ficam no armazenamento local do navegador (localStorage), não são enviados ao GitHub.
+- O site é público, então não coloque dados financeiros em arquivos do repositório.
+- Os dados ficam vinculados ao navegador/dispositivo e ao endereço do site. Não são sincronizados automaticamente com outro aparelho.
+- Use regularmente o botão “Exportar backup JSON” dentro do painel e guarde o arquivo em local seguro.
+- Se limpar os dados do Safari, trocar de navegador/dispositivo ou alterar o endereço do site, os dados locais podem não aparecer; restaure usando “Importar backup”.
+- O modo offline/cache ajuda a abrir a interface após a primeira visita, mas faça backups regulares.
+
+LIMITAÇÃO ATUAL
+A importação automática de faturas em PDF ainda não está implementada; cadastre o total da fatura manualmente. As compras detalhadas podem ser registradas à parte sem somar duas vezes ao total.
