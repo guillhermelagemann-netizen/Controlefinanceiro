@@ -1,5 +1,23 @@
-NOSSO LAR — PAINEL VISUAL
+NOSSO LAR — PACOTE ATUALIZADO PARA IPAD
 
-Para atualizar seu site GitHub Pages: no repositório, substitua o index.html pelo arquivo desta pasta e envie também os demais arquivos do pacote se solicitado. Mantenha index.html na raiz do repositório. Depois aguarde alguns minutos e recarregue o site.
+Arquivos do site:
+- index.html: painel atualizado, com campo de dinheiro guardado e menu separado de análise de cartões.
+- manifest.webmanifest e ícones: instalação como app no iPad.
+- sw.js: cache offline com versão atualizada.
 
-Os lançamentos ficam no armazenamento local do navegador/dispositivo. Faça backup JSON periodicamente. Não coloque dados financeiros reais no repositório público.
+ATUALIZAÇÃO DO SITE JÁ PUBLICADO:
+1. Faça backup JSON dentro do Nosso Lar antes de trocar arquivos.
+2. No repositório GitHub Pages, substitua index.html e sw.js pelos arquivos deste pacote.
+3. Mantenha manifest.webmanifest, icon-192.png e icon-512.png na raiz do repositório.
+4. Aguarde a publicação e abra o site no Safari. Se necessário, feche a aba e abra novamente.
+
+NOVAS FUNÇÕES:
+- Dinheiro guardado: valor salvo localmente, separado do saldo mensal.
+- Análise de cartões: extrai texto de PDFs que contenham texto selecionável, propõe linhas de compras para revisão, registra cartão/mês/valor e parcela opcional e compara os totais por cartão e mês.
+
+LIMITAÇÕES IMPORTANTES:
+- A identificação de compras a partir do PDF é aproximada e varia conforme o banco. Revise e corrija cada linha antes de importar.
+- PDF escaneado como imagem pode não ser legível sem OCR; nesses casos, digite as compras manualmente no campo de revisão.
+- O leitor PDF.js é carregado da internet na primeira utilização; precisa de conexão nessa etapa.
+- As compras detalhadas ficam na área de análise e NÃO são somadas de novo às despesas gerais.
+- Os dados ficam no armazenamento local do navegador; exporte backups periodicamente. Não há sincronização entre dispositivos.
