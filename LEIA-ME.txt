@@ -1,17 +1,16 @@
-NOSSO LAR — VERSÃO 14
+NOSSO LAR — VERSÃO 13
 
 Atualizações desta versão:
-1. Gráfico “Despesas por categoria” mais compacto para aproveitar melhor o espaço da tela inicial.
-2. Despesas não pagas com vencimento anterior à data atual são destacadas em vermelho em “Próximos lançamentos”, com indicação “Vencida”.
-3. Removida a seção “Como funciona o controle da casa”. O “Resumo do mês” foi reorganizado em indicadores compactos, com saldo previsto e receitas em destaque.
-4. Menu lateral modernizado com ícones em fundos suaves, realce da opção selecionada e espaçamento aprimorado.
+1. Ao navegar pelos meses no topo, os menus e relatórios são atualizados para o mês selecionado. A lista de parcelas e a lista de faturas mostram os itens do mês; despesas fixas indicam se estão previstas naquele mês; a análise de cartões acompanha o período de seis meses encerrado no mês selecionado.
+2. O gráfico “Evolução das despesas” compara os últimos seis meses por categoria, usa cores consistentes por categoria, exibe legenda, total mensal e valores em reais ao tocar/passar o cursor sobre as faixas.
+3. Mantidas as funcionalidades da versão 12.
 
-As funcionalidades anteriores da versão 13 foram mantidas. O service worker usa uma nova chave de cache para facilitar a atualização publicada.
+INSTALAÇÃO
+- Antes de substituir arquivos, exporte um backup JSON dentro do sistema e guarde-o em local seguro.
+- Envie os seis arquivos deste ZIP para a raiz do repositório GitHub Pages, substituindo os arquivos de mesmo nome.
+- Mantenha o mesmo endereço/URL usado atualmente.
+- A versão 13 não altera a chave de armazenamento local do navegador; ainda assim, mantenha o backup antes da atualização.
+- Após publicar, recarregue a página. Se o navegador mostrar uma versão antiga, feche e reabra a página antes de avaliar.
 
-PUBLICAÇÃO
-- Faça backup JSON dos dados antes de substituir arquivos.
-- Extraia todos os arquivos do ZIP para a raiz do repositório GitHub Pages, substituindo os arquivos de mesmo nome.
-- Mantenha a mesma URL para preservar o acesso aos dados salvos no navegador.
-- Após publicar, recarregue o sistema. Não limpe os dados do Safari.
-
-Observação: a validação realizada nesta entrega inclui sintaxe JavaScript e integridade do ZIP. Testes funcionais no Safari/iPad devem ser feitos após a publicação.
+ARQUIVOS
+index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png e LEIA-ME.txt
