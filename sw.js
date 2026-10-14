@@ -1,4 +1,4 @@
-const CACHE = 'nosso-lar-v7-20261013';
+const CACHE = 'nosso-lar-v8-20261013';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   self.skipWaiting();
