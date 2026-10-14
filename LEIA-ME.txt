@@ -1,28 +1,11 @@
-NOSSO LAR — MELHORIAS NA ANÁLISE DE CARTÕES (2026-10-13-r8)
+NOSSO LAR — PACOTE COMPLETO v10
 
-IMPORTANTE: este ZIP contém os arquivos diretamente na raiz. Extraia primeiro e envie os ARQUIVOS que estão dentro dele para a raiz do repositório GitHub Pages. Não envie o ZIP inteiro e não crie uma subpasta.
+Arquivos incluídos: index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png e LEIA-ME.txt.
 
-ARQUIVOS A PUBLICAR: index.html, sw.js, manifest.webmanifest, icon-192.png e icon-512.png.
+Publicação no GitHub Pages:
+1. Faça backup dos dados atuais do Nosso Lar.
+2. Extraia este ZIP e envie TODOS os arquivos para a mesma pasta publicada no GitHub Pages (normalmente a raiz).
+3. Confirme que os cinco arquivos da aplicação estão na raiz do site.
+4. Reabra/atualize o site e teste a opção de importar o JSON em Análise de cartões.
 
-NOVIDADES DESTA VERSÃO:
-- Ícone próprio no menu Análise de cartões.
-- Seleção do banco emissor ao importar a fatura (Nubank, Santander e outros).
-- Compras agrupadas por banco, com totais separados.
-- Comparativo visual com gráfico de barras empilhadas por mês e banco.
-- Indicadores de compras no período, quantidade de bancos e banco com maior utilização.
-- Tabela mensal complementar para comparar valores exatos.
-- Mantém compras detalhadas fora dos totais gerais para evitar duplicidade.
-- Cache v8 para forçar a atualização do app instalado.
-
-ATUALIZAÇÃO PELO IPAD:
-1. Exporte um backup JSON e confira que está no app Arquivos.
-2. Baixe e extraia o ZIP.
-3. No GitHub, abra a raiz do repositório (onde já existe index.html).
-4. Envie e substitua os cinco arquivos listados acima na raiz.
-5. Faça Commit changes e aguarde a publicação.
-6. Feche a aba do painel e reabra o site no Safari. Se o app da tela inicial ainda mostrar a versão antiga, abra o site no Safari normal primeiro, conectado à internet.
-
-OBSERVAÇÕES:
-- A importação automática tenta extrair texto de PDFs e pode errar; revise as compras antes de importar. PDFs escaneados como imagem exigem digitação manual ou OCR externo.
-- Os dados permanecem no armazenamento local do navegador; não há sincronização entre dispositivos. Faça backups periódicos.
-- Para novas importações, selecione o banco emissor antes de ler o PDF. Registros antigos sem banco explícito serão agrupados por inferência a partir do nome do cartão.
+Não apague os dados do navegador nem limpe os dados do Safari.
