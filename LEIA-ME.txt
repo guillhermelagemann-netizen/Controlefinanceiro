@@ -1,11 +1,16 @@
-NOSSO LAR — PACOTE COMPLETO v10
+NOSSO LAR — VERSÃO 11 (comparativo de faturas)
 
-Arquivos incluídos: index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png e LEIA-ME.txt.
+Correções desta versão:
+- Comparativo visual usa os totais das faturas cadastradas por banco e mês, em vez de confundir o subtotal de compras com o total da fatura.
+- Compras por banco e parcelas separa compras/parcelas, encargos e créditos/estornos, exibindo o total da fatura uma única vez por banco/mês.
+- Cores fixas: Nubank roxo, Santander vermelho e Caixa azul.
 
-Publicação no GitHub Pages:
-1. Faça backup dos dados atuais do Nosso Lar.
-2. Extraia este ZIP e envie TODOS os arquivos para a mesma pasta publicada no GitHub Pages (normalmente a raiz).
-3. Confirme que os cinco arquivos da aplicação estão na raiz do site.
-4. Reabra/atualize o site e teste a opção de importar o JSON em Análise de cartões.
+ATUALIZAÇÃO SEGURA:
+1. Antes de tudo, exporte um backup JSON do Nosso Lar e guarde-o fora do Safari.
+2. Extraia todos os arquivos deste ZIP.
+3. Envie/substitua TODOS os arquivos na raiz do repositório publicado no GitHub Pages.
+4. Abra o site novamente. Se a versão antiga continuar aparecendo, feche a aba e reabra o site; não limpe os dados do Safari.
+5. Confira em Análise de cartões o mês da fatura e compare os totais.
 
-Não apague os dados do navegador nem limpe os dados do Safari.
+Totais de referência para setembro/2026: Caixa R$ 1.048,04; Nubank R$ 2.700,49; Santander R$ 2.102,21; total R$ 5.850,74.
+Compras/parcelas são mostradas separadamente dos encargos e créditos para não confundir subtotal de compras com valor cobrado na fatura.
