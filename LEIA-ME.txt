@@ -15,3 +15,6 @@ PUBLICAÇÃO
 - Após publicar, recarregue o sistema. Não limpe os dados do Safari.
 
 Observação: a validação realizada nesta entrega inclui sintaxe JavaScript e integridade do ZIP. Testes funcionais no Safari/iPad devem ser feitos após a publicação.
+
+
+Atualização v16: identidade visual ajustada à referência do painel, ícones de bancos nas faturas da tela inicial, remoção da área opcional/informativa de compras detalhadas do menu Faturas e lista de transações da Análise de Cartões limitada ao mês selecionado.
